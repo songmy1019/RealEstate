@@ -1,0 +1,65 @@
+server:
+    port: 8083
+
+---
+
+spring:
+  profiles: 
+    active: dev
+  application:
+    name: chargeadm
+  jpa:
+    properties:
+      hibernate:
+        "[show_sql]": true
+        "[format_sql]": true
+    hibernate:
+      ddl-auto: create
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: chargeadm
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+logging:
+  level:
+    "[org.hibernate.type]": trace
+    "[org.springframework.cloud]": debug
+
+masurl:
+  realestate: localhost:8081
+  brokerage: localhost:8082
+  chargeadm: localhost:8083
+
+---
+ 
+spring:
+  profiles: 
+    active: docker
+  application:
+    name: chargeadm
+  jpa:
+    hibernate:
+      ddl-auto: create
+  kafka:
+    consumer:
+      bootstrap-servers: my-kafka.kafka.svc.cluster.local:9092
+      group-id: chargeadm
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: my-kafka.kafka.svc.cluster.local:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+masurl:
+  realestate: realestate:8080
+  brokerage: brokerage:8080
+  chargeadm: chargeadm:8080

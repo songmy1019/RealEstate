@@ -1,0 +1,54 @@
+server:
+  port: 8080
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include:
+                    - "gateway"
+    endpoint:
+        gateway:
+            enabled: true
+
+---
+
+spring:
+  profiles: 
+    active: dev
+  cloud:
+    gateway:
+      routes:
+      - id: RealEstate
+        uri: http://localhost:8081
+        predicates:
+        - Path=/realestate/{segment}
+      - id: Brokerage
+        uri: http://localhost:8082
+        predicates:
+        - Path=/brokerage/{segment} 
+      - id: ChargeAdm
+        uri: http://localhost:8083
+        predicates:
+        - Path=/chargeadm/{segment}
+
+---
+
+spring:
+  profiles: 
+    active: docker
+  cloud:
+    gateway:
+      routes:
+      - id: RealEstate
+        uri: http://realestate:8080
+        predicates:
+        - Path=/realestate/{segment}
+      - id: Brokerage
+        uri: http://brokerage:8080
+        predicates:
+        - Path=/brokerage/{segment} 
+      - id: ChargeAdm
+        uri: http://chargeadm:8080
+        predicates:
+        - Path=/chargeadm/{segment}
